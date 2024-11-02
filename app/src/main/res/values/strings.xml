@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">clockApp</string>
+    <string name="edit">Sửa</string>
+    <string name="add">Thêm</string>
+    <string name="clock">Đồng hồ</string>
+    <string name="alarm">Báo thức</string>
+    <string name="timer"> Bấm giờ </string>
+    <string name="delete">Xóa</string>
+    <string name="cancel">Hủy</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
