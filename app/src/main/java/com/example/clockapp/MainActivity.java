@@ -2,37 +2,40 @@ package com.example.clockapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.ContextMenu;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.clockapp.databinding.FragmentClockItemsBinding;
+import com.example.clockapp.placeholder.AlarmModel;
+import com.example.clockapp.placeholder.Clockmodel;
+import com.example.clockapp.placeholder.alarm;
 import com.example.clockapp.placeholder.clock;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    private Clockmodel clockmodel;
+    private AlarmModel alarmModel;
     private ArrayList<clock> listClock = new ArrayList<>();
     private int MenuId = 0;
+    private Menu menu;
+    private  FragmentClockItemsBinding binding;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +46,12 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        // nen import androidx
+
+        clockmodel = new ViewModelProvider(this).get(Clockmodel.class);
+        alarmModel = new ViewModelProvider(this).get(AlarmModel.class);
+        //lay checkbox
+        binding = FragmentClockItemsBinding.inflate(getLayoutInflater());
+
 
         TabLayout tabLayout = findViewById(R.id.tablayout);
         ViewPager viewPager = findViewById(R.id.viewPager);
@@ -84,42 +92,94 @@ public class MainActivity extends AppCompatActivity {
         //clock
         if (item.getItemId() == R.id.CAdd){
             //them dong ho
+            setTitle("");
             Intent intent = new Intent(MainActivity.this, Add_clock.class);
-            ActivityResultLauncher<Intent> new_clock = registerForActivityResult(
-                    new ActivityResultContracts.StartActivityForResult(),
-                    new ActivityResultCallback<ActivityResult>() {
-                        @Override
-                        public void onActivityResult(ActivityResult o) {
 
-                        }
-                    });
+            startActivityForResult(intent,1);
         }
+
+        //checkbox ko thay doi dc
+
         if (item.getItemId() == R.id.CEdit){
             //sua dong ho
+            menu.clear();
+            getMenuInflater().inflate(R.menu.edit, menu);
+
+            binding.Cb.setVisibility(View.VISIBLE);
+
+
+
         }
+        //sua dong ho
+        if (item.getItemId() == R.id.IDel){
+            binding.Cb.setVisibility(View.GONE);
+            menu.clear();
+            getMenuInflater().inflate(R.menu.clock, menu);
+        }
+        if (item.getItemId() == R.id.IFinish){
+            binding.Cb.setVisibility(View.GONE);
+            menu.clear();
+            getMenuInflater().inflate(R.menu.clock, menu);
+
+
+        }
+        //them bao thuc
         if (item.getItemId() == R.id.AlAdd){
-            //them bao thuc
+
+            Intent intent = new Intent(MainActivity.this, Add_alarm.class);
+
+            startActivityForResult(intent,1);
         }
         if (item.getItemId() == R.id.AlEdit){
             //sua bao thuc
         }
         if (item.getItemId() == R.id.AlSettings){
             //cai dat bao thuc
+            
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 1 ){
+            Bundle b = data.getBundleExtra("clock");
+            clock c =(clock) b.getSerializable("clock");
+            clockmodel.setData(c);
+
+        }
+
+        if (resultCode == 2 ){
+
+            Bundle b = data.getBundleExtra("alarm");
+            alarm a = (alarm) b.getSerializable("alarm");
+            alarmModel.setData(a);
+
+        }
+
+
+    }
+
+    @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        this.menu = menu;
+
         if(MenuId == 1) {
-            setTitle("báo thức");
+            setTitle("Báo thức");
             getMenuInflater().inflate(R.menu.alarm, menu);
         }
-        else {
+        else
+            if (MenuId == 2) {
+            setTitle("Bấm giờ");
+            getMenuInflater().inflate(R.menu.timer, menu);
+        }
+        else  {
             setTitle("Đồng hồ");
             getMenuInflater().inflate(R.menu.clock, menu);
         }
+
         return super.onPrepareOptionsMenu(menu);
     }
 

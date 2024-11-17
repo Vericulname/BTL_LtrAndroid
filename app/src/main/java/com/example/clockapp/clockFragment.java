@@ -5,30 +5,31 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.clockapp.placeholder.Clockmodel;
 import com.example.clockapp.placeholder.clock;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.TimeZone;
+import android.icu.util.TimeZone;
+import android.widget.LinearLayout;
 
 /**
  * A fragment representing a list of Items.
  */
 public class clockFragment extends Fragment {
+
+    MyClockRecyclerViewAdapter clockAdapter;
+    private Clockmodel vm;
 
     // TODO: Customize parameter argument names
     ArrayList<clock> listClock = new ArrayList<>();
@@ -36,15 +37,9 @@ public class clockFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public clockFragment() {
 
     }
-
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static clockFragment newInstance(int columnCount) {
@@ -55,12 +50,22 @@ public class clockFragment extends Fragment {
         return fragment;
     }
 
+    //cap nhat danh sach clock
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onResume() {
+        super.onResume();
+        System.out.println("resume");
+        //lay dl
+        vm = new ViewModelProvider(requireActivity()).get(Clockmodel.class);
 
-
+        clock c = (clock) vm.getData().getValue();
+        if (c != null){
+            listClock.add(c);
+            clockAdapter.notifyDataSetChanged();
+        }
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,7 +85,8 @@ public class clockFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyClockRecyclerViewAdapter(listClock));
+            clockAdapter = new MyClockRecyclerViewAdapter(listClock);
+            recyclerView.setAdapter(clockAdapter);
         }
         return view;
     }
@@ -92,7 +98,7 @@ public class clockFragment extends Fragment {
     }
 
     private void init(){
-        listClock.add(new clock(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"),new Locale("vi","VN") ) );
-        listClock.add(new clock (TimeZone.getTimeZone("America/New_York"),new Locale("en","US" )) );
+        listClock.add(new clock(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"),new Locale("","VN") ) );
+        listClock.add(new clock (TimeZone.getTimeZone("America/New_York"),new Locale("","US" )) );
     }
 }

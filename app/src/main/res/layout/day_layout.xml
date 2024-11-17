@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ToggleButton xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/day_textview"
+    android:layout_width="match_parent"
+    android:layout_height="38dp"
+    android:layout_weight="1"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
+    android:gravity="center"
+    android:textOff="test"
+    android:textOn="test">
+
+</ToggleButton>

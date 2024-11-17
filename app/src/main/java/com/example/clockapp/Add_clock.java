@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.activity.EdgeToEdge;
@@ -11,11 +12,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
 import com.example.clockapp.placeholder.clock;
 
-public class Add_clock extends AppCompatActivity {
+import java.util.Locale;
+import android.icu.util.TimeZone;
+import android.widget.SearchView;
+import android.widget.TextView;
+
+public class Add_clock extends AppCompatActivity implements SearchView.OnQueryTextListener {
+
 
     ListView lv;
+    TextView bt;
+    SearchView sv;
+    ArrayAdapter<?> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,21 +37,44 @@ public class Add_clock extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        lv = findViewById(R.id.lvTimeZone);
+        sv = findViewById(R.id.searchView);
+        bt = findViewById(R.id.btCancel);
+        sv.setOnQueryTextListener(this);
+        String[] tz = TimeZone.getAvailableIDs(TimeZone.SystemTimeZoneType.CANONICAL_LOCATION, null, null).toArray(new String[0]);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, tz);
 
-        lv.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        lv.setAdapter(adapter);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                clock clock = new clock(null,null);
-                Intent intent = new Intent(Add_clock.this,MainActivity.class).setFlags(RESULT_OK);
-                startActivity(intent);
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                TimeZone tz = TimeZone.getTimeZone(adapterView.getItemAtPosition(i).toString());
+                clock clock = new clock(tz, new Locale("",tz.getID().split("/")[1] ));
+                Intent intent = getIntent();
+                Bundle b = new Bundle();
+                b.putSerializable("clock",clock);
+                intent.putExtra("clock",b);
+                setResult(1,intent);
                 finish();
             }
-
+        } );
+        bt.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+            public void onClick(View view) {
+                finish();
             }
         });
 
+        }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        adapter.getFilter().filter(s);
+        return false;
     }
 }

@@ -2,57 +2,44 @@ package com.example.clockapp.placeholder;
 
 import java.io.Serializable;
 import java.sql.Time;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 public class alarm implements Serializable {
-//    private Time time;
-//    private Date date;
-//    private String content;
-//    private String alarm_song;
-//    private boolean status;
-//
-//    public alarm(Date date, Time time, String content, boolean status, String alarm_song) {
-//        this.date = date;
-//        this.time = time;
-//        this.content = content;
-//        this.status = status;
-//        this.alarm_song = alarm_song;
-//
-//    }
-//
-//    public Time getTime() {
-//        return time;
-//    }
-//
-//    public void setTime(Time time) {
-//        this.time = time;
-//    }
-//
-//    public Date getDate() {
-//        return date;
-//    }
-//
-//    public void setDate(Date date) {
-//        this.date = date;
-//    }
-//
-//    public String getContent() {
-//        return content;
-//    }
-//
-//    public void setContent(String content) {
-//        this.content = content;
-//    }
-//
-//    public boolean isStatus() {
-//        return status;
-//    }
-//
-//    public void setStatus(boolean status) {
-//        this.status = status;
-//    }
-//
-//    public String getAlarm_song() {
-//        return alarm_song;
-//    }
+
+    private Calendar calendar;
+    private Map<Integer,String> days;
+    private Time time;
+    private final String alarm_song;
+    private boolean status;
+
+    public alarm(  String alarm_song, Map<Integer,String> days,Time time, boolean status)  {
+
+        this.days = days;
+        this.status = status;
+        this.alarm_song = alarm_song;
+        this.time = time;
+
+    }
+
+    public Time getTime() {
+        return time;
+    }
+    public Calendar getCalendar() {
+        return calendar;
+    }
+
+    public Map<Integer,String> getDays() {
+        return days;
+    }
+
+
+
+
+    public boolean isStatus() {
+        return status;
+    }
+
 }

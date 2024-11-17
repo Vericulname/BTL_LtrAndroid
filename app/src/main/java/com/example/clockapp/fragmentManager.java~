@@ -22,7 +22,7 @@ public class fragmentManager extends FragmentStatePagerAdapter {
         } else if (position == 2) {
             return new TimerFragment();
         }
-        return new clockFragment();
+        return null;
     }
 
     @Override

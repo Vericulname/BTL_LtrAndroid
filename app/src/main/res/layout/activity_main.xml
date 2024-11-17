@@ -18,25 +18,22 @@
             android:orientation="vertical"
             android:visibility="visible">
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tablayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="visible" />
+                android:layout_weight="10"
+                android:visibility="visible">
+
+            </androidx.viewpager.widget.ViewPager>
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tablayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
         </LinearLayout>
-
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/fragContain"
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
 
     </LinearLayout>
 

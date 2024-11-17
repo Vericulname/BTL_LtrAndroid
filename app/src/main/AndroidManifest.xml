@@ -13,10 +13,10 @@
         android:theme="@style/Theme.ClockApp"
         tools:targetApi="31">
         <activity
-            android:name=".Add_clock"
+            android:name=".Add_alarm"
             android:exported="false" />
         <activity
-            android:name=".clock"
+            android:name=".Add_clock"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

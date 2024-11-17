@@ -38,7 +38,7 @@ public class MyClockRecyclerViewAdapter extends RecyclerView.Adapter<MyClockRecy
     public void onBindViewHolder(final MyClockRecyclerViewAdapter.ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mClock.setTimeZone(mValues.get(position).getTimeZone().getID());
-        holder.mContentView.setText( mValues.get(position).getLocation().getDisplayCountry());
+        holder.mContentView.setText( mValues.get(position).getLocation().getDisplayCountry().toLowerCase());
     }
 
     @Override

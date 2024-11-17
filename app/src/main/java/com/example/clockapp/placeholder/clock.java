@@ -1,16 +1,11 @@
 package com.example.clockapp.placeholder;
 
-import android.icu.util.Calendar;
-import android.location.Location;
-
 import java.io.Serializable;
-import java.sql.Time;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.time.ZoneId;
 import java.util.Locale;
-import java.util.TimeZone;
+import android.icu.util.TimeZone;
 
-public class clock implements Serializable  {
+public class clock implements Serializable   {
     Locale location;
     TimeZone timeZone;
     public clock(TimeZone timeZone, Locale location) {
