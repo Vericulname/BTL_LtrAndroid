@@ -1,4 +1,4 @@
-package com.example.clockapp;
+package com.example.clockapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.clockapp.R;
 import com.example.clockapp.placeholder.clock;
 
 import java.util.Locale;

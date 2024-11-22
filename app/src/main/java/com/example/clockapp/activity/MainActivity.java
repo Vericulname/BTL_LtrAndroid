@@ -1,11 +1,10 @@
-package com.example.clockapp;
+package com.example.clockapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -18,7 +17,9 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.clockapp.R;
 import com.example.clockapp.databinding.FragmentClockItemsBinding;
+import com.example.clockapp.fragments.fragmentManager;
 import com.example.clockapp.placeholder.AlarmModel;
 import com.example.clockapp.placeholder.Clockmodel;
 import com.example.clockapp.placeholder.alarm;
@@ -30,10 +31,8 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private Clockmodel clockmodel;
     private AlarmModel alarmModel;
-    private ArrayList<clock> listClock = new ArrayList<>();
     private int MenuId = 0;
     private Menu menu;
-    private  FragmentClockItemsBinding binding;
 
 
     @Override
@@ -49,8 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
         clockmodel = new ViewModelProvider(this).get(Clockmodel.class);
         alarmModel = new ViewModelProvider(this).get(AlarmModel.class);
-        //lay checkbox
-        binding = FragmentClockItemsBinding.inflate(getLayoutInflater());
 
 
         TabLayout tabLayout = findViewById(R.id.tablayout);
@@ -105,21 +102,13 @@ public class MainActivity extends AppCompatActivity {
             menu.clear();
             getMenuInflater().inflate(R.menu.edit, menu);
 
-            binding.Cb.setVisibility(View.VISIBLE);
-
-
-
         }
         //sua dong ho
         if (item.getItemId() == R.id.IDel){
-            binding.Cb.setVisibility(View.GONE);
-            menu.clear();
-            getMenuInflater().inflate(R.menu.clock, menu);
+
         }
         if (item.getItemId() == R.id.IFinish){
-            binding.Cb.setVisibility(View.GONE);
-            menu.clear();
-            getMenuInflater().inflate(R.menu.clock, menu);
+
 
 
         }

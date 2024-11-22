@@ -1,18 +1,17 @@
-package com.example.clockapp;
+package com.example.clockapp.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.example.clockapp.R;
 
 public class TimerFragment extends Fragment {
 

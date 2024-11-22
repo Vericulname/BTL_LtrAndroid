@@ -1,4 +1,4 @@
-package com.example.clockapp;
+package com.example.clockapp.fragments;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

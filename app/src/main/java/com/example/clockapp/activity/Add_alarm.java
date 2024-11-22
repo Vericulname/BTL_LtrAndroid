@@ -1,32 +1,28 @@
-package com.example.clockapp;
+package com.example.clockapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.clockapp.R;
 import com.example.clockapp.placeholder.AlarmModel;
 import com.example.clockapp.placeholder.alarm;
 
-import java.sql.Time;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -99,7 +95,11 @@ public class Add_alarm extends AppCompatActivity {
                     days.put(tv.getId(), tv.getTextOn().toString() );
                 }
             }
-            alarm =  new alarm("test",days ,new Time(timePicker.getCurrentHour(),timePicker.getCurrentMinute(),0),true);
+            Calendar calendar = new GregorianCalendar();
+
+            calendar.add(Calendar.HOUR,timePicker.getCurrentHour());
+            calendar.add(Calendar.MINUTE,timePicker.getCurrentMinute());
+            alarm =  new alarm("test",days ,calendar);
             Intent intent = getIntent();
             Bundle b = new Bundle();
             b.putSerializable("alarm",alarm);

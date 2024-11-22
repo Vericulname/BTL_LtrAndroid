@@ -1,6 +1,9 @@
-package com.example.clockapp;
+package com.example.clockapp.fragments;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,13 +18,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.clockapp.ViewAdapter.MyalarmRecyclerViewAdapter;
+import com.example.clockapp.R;
+import com.example.clockapp.alarmReceiver;
 import com.example.clockapp.placeholder.AlarmModel;
-import com.example.clockapp.placeholder.Clockmodel;
 import com.example.clockapp.placeholder.alarm;
 
 import java.util.ArrayList;
-
-import java.util.GregorianCalendar;
 
 /**
  * A fragment representing a list of Items.
@@ -34,9 +37,12 @@ public class alarmFragment extends Fragment {
 
     private int mColumnCount = 1;
 
-    MyalarmRecyclerViewAdapter adapter;
+    private MyalarmRecyclerViewAdapter adapter;
     private AlarmModel vm;
-    ArrayList<alarm> alarmsList = new ArrayList<>();
+    private ArrayList<alarm> alarmsList = new ArrayList<>();
+    private AlarmManager alarmManager;
+
+
     public alarmFragment() {
     }
 
@@ -56,6 +62,7 @@ public class alarmFragment extends Fragment {
 //        if (getArguments() != null) {
 //            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
 //        }
+
     }
 
 
@@ -64,11 +71,14 @@ public class alarmFragment extends Fragment {
         super.onResume();
         vm = new ViewModelProvider(requireActivity()).get(AlarmModel.class);
         alarm a = (alarm) vm.getData().getValue();
+
         if (a != null) {
             alarmsList.add(a);
+            vm.setData(null);
             adapter.notifyDataSetChanged();
         }
     }
+
 
 
     @Override
@@ -79,15 +89,23 @@ public class alarmFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
+
             RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            adapter = new MyalarmRecyclerViewAdapter(alarmsList);
+            Intent intent = new Intent(super.getContext(), alarmReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(super.getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            alarmManager = (AlarmManager) requireActivity().getSystemService(Context.ALARM_SERVICE);
+
+            adapter = new MyalarmRecyclerViewAdapter(alarmsList,pendingIntent,alarmManager);
             recyclerView.setAdapter(adapter);
+
         }
+
+
         return view;
     }
 
@@ -101,4 +119,5 @@ public class alarmFragment extends Fragment {
     private void init(){
 
     }
+
 }

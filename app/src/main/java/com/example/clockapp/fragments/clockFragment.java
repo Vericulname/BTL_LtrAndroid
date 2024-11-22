@@ -1,4 +1,4 @@
-package com.example.clockapp;
+package com.example.clockapp.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,16 +12,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.clockapp.ViewAdapter.MyClockRecyclerViewAdapter;
+import com.example.clockapp.R;
 import com.example.clockapp.placeholder.Clockmodel;
 import com.example.clockapp.placeholder.clock;
 
 import java.util.ArrayList;
 import java.util.Locale;
 import android.icu.util.TimeZone;
-import android.widget.LinearLayout;
 
 /**
  * A fragment representing a list of Items.
@@ -61,6 +63,7 @@ public class clockFragment extends Fragment {
         clock c = (clock) vm.getData().getValue();
         if (c != null){
             listClock.add(c);
+            vm.setData(null);
             clockAdapter.notifyDataSetChanged();
         }
     }
@@ -90,6 +93,8 @@ public class clockFragment extends Fragment {
         }
         return view;
     }
+
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
