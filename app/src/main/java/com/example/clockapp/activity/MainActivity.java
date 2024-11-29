@@ -1,12 +1,16 @@
 package com.example.clockapp.activity;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +23,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.clockapp.R;
 import com.example.clockapp.databinding.FragmentClockItemsBinding;
+import com.example.clockapp.fragments.alarmFragment;
+import com.example.clockapp.fragments.clockFragment;
 import com.example.clockapp.fragments.fragmentManager;
 import com.example.clockapp.placeholder.AlarmModel;
 import com.example.clockapp.placeholder.Clockmodel;
@@ -27,12 +33,15 @@ import com.example.clockapp.placeholder.clock;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private Clockmodel clockmodel;
     private AlarmModel alarmModel;
     private int MenuId = 0;
     private Menu menu;
+    private SQLiteDatabase db = null;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
 
 
     @Override
@@ -48,6 +57,21 @@ public class MainActivity extends AppCompatActivity {
 
         clockmodel = new ViewModelProvider(this).get(Clockmodel.class);
         alarmModel = new ViewModelProvider(this).get(AlarmModel.class);
+
+        db = openOrCreateDatabase("clockapp.db",MODE_PRIVATE,null);
+
+        try {
+
+            String AddtblClock = "create table clock(clock_id integer primary key autoincrement, location text , timeZone text) ";
+            db.execSQL(AddtblClock);
+
+            String AbbtblAlarm =  "create table alarm( alarm_id integer primary key autoincrement, alarm_song text, days text, time long,Ison bolean)";
+            db.execSQL(AbbtblAlarm);
+
+        }catch ( Exception e){
+
+            Toast.makeText(this, "bang da ton tai", Toast.LENGTH_SHORT).show();
+        }
 
 
         TabLayout tabLayout = findViewById(R.id.tablayout);
@@ -93,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, Add_clock.class);
 
             startActivityForResult(intent,1);
+
         }
 
         //checkbox ko thay doi dc
@@ -101,15 +126,21 @@ public class MainActivity extends AppCompatActivity {
             //sua dong ho
             menu.clear();
             getMenuInflater().inflate(R.menu.edit, menu);
+            clockFragment.menu = menu;
+            clockFragment.editMode();
 
         }
         //sua dong ho
         if (item.getItemId() == R.id.IDel){
 
+            clockFragment.delete();
+            clockFragment.FinishEdit();
         }
         if (item.getItemId() == R.id.IFinish){
-
-
+            clockFragment.FinishEdit();
+            menu.clear();
+            setTitle("Đồng hồ");
+            getMenuInflater().inflate(R.menu.clock, menu);
 
         }
         //them bao thuc
@@ -121,6 +152,11 @@ public class MainActivity extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.AlEdit){
             //sua bao thuc
+            menu.clear();
+            getMenuInflater().inflate(R.menu.edit, menu);
+            clockFragment.menu = menu;
+            clockFragment.editMode();
+
         }
         if (item.getItemId() == R.id.AlSettings){
             //cai dat bao thuc
@@ -133,9 +169,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        int alarm_pos = -1;
         if (resultCode == 1 ){
             Bundle b = data.getBundleExtra("clock");
             clock c =(clock) b.getSerializable("clock");
+            ContentValues v = new ContentValues();
+            try {
+                v.put("location", c.getLocation().toString());
+                v.put("timeZone", c.getTimeZone().getID());
+                db.insert("clock", null, v);
+            }
+            catch ( Exception e){
+                Toast.makeText(this, "Loi them dong ho", Toast.LENGTH_SHORT).show();
+            }
+
             clockmodel.setData(c);
 
         }
@@ -143,7 +190,44 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == 2 ){
 
             Bundle b = data.getBundleExtra("alarm");
+            alarm_pos = b.getInt("alarm_pos") ;
             alarm a = (alarm) b.getSerializable("alarm");
+            ContentValues v = new ContentValues();
+
+
+            try {
+
+                v.put("alarm_song", a.getAlarm_song());
+
+                StringBuilder days = new StringBuilder();
+                for (int day: a.getDays()) {
+
+                    days.append(day).append(",");
+                }
+
+                //loi null khi ko co ngay nao duoc chon
+                if (days.length() == 0)
+                    days.append(0).append(",");
+
+                v.put("days", days.toString().substring(0,days.length()-1) );
+                v.put("time", a.getTime());
+
+
+                alarmModel.SetPos(alarm_pos);
+                if (alarm_pos != -1){
+
+                    db.update("alarm",v,"alarm_id=?", new String[]{String.valueOf(alarm_pos)} );
+                }
+                else {
+                    db.insert("alarm", null, v);
+                }
+
+
+            }
+            catch ( Exception e){
+                Toast.makeText(this, "Loi them bao thuc", Toast.LENGTH_SHORT).show();
+            }
+
             alarmModel.setData(a);
 
         }
@@ -178,6 +262,5 @@ public class MainActivity extends AppCompatActivity {
 //        return super.onCreateOptionsMenu(menu);
 //
 //    }
-
 
 }

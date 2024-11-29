@@ -2,6 +2,7 @@ package com.example.clockapp.activity;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -12,6 +13,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.clockapp.R;
+
+import java.io.IOException;
 
 public class Alarm_active extends AppCompatActivity {
     private TextView tv;
@@ -28,35 +31,36 @@ public class Alarm_active extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-//        tv = this.findViewById(R.id.tvTime);
-//        bt = this.findViewById(R.id.btOff);
-//        Bundle b = getIntent().getExtras();
+        tv = this.findViewById(R.id.tvTime);
+        bt = this.findViewById(R.id.btOff);
+        Bundle b = getIntent().getExtras();
 //        alarm a = (alarm) b.getSerializable("alarm");
-//
-//        //phat nhac
-////        try {
-////            play.setDataSource(this, MediaStore.Audio.Media.INTERNAL_CONTENT_URI);
-////            play.prepare();
-////        } catch (IOException e) {
-////            throw new RuntimeException(e);
-////        }
-////        play.start();
-//
+
+        //phat nhac
+        try {
+            play = MediaPlayer.create(this, R.raw.nhac);
+
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        play.start();
+
 //        tv.setText(a.getTime().toString());
-//
-//        bt.setOnClickListener(v -> {
-//            play.stop();
-//            play.release();
-//
-//            finish();
-//                }
-//        );
+
+        bt.setOnClickListener(v -> {
+            play.stop();
+
+
+            finish();
+                }
+        );
     }
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        play.stop();
-//        play.release();
-//    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        play.stop();
+
+    }
 
 }

@@ -78,4 +78,6 @@ public class Add_clock extends AppCompatActivity implements SearchView.OnQueryTe
         adapter.getFilter().filter(s);
         return false;
     }
+
+
 }
